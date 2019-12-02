@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Leap;
 
 public class CheckersBoard : MonoBehaviour
 {
@@ -24,12 +25,17 @@ public class CheckersBoard : MonoBehaviour
     private List<Piece> forcedPieces;
     private bool hasKilled;
 
+
+    Leap.Controller c;
+
     // Start is called before the first frame update
     private void Start()
     {
         isWhiteTurn = true;
         forcedPieces = new List<Piece>();
         GenerateBoard();
+
+        c = new Controller();
     }
 
     // Update is called once per frame
@@ -61,7 +67,7 @@ public class CheckersBoard : MonoBehaviour
     }
     private void UpdateMouseOver()
     {
-        if(!Camera.main)
+        if (!Camera.main)
         {
             Debug.Log("Unable to find main camera");
             return;
@@ -78,6 +84,30 @@ public class CheckersBoard : MonoBehaviour
             mouseOver.x = -1;
             mouseOver.y = -1;
         }
+        Leap.Frame frame = c.Frame(0);
+
+        List<Hand> handList = new List<Hand>();
+        for (int h = 0; h < frame.Hands.Count; h++)
+        {
+            Hand leapHand = frame.Hands[h];
+            handList.Add(leapHand);
+        }
+
+        Leap.Finger indexFinger;
+
+        if (handList != null && frame.Hands.Count > 0)
+        {
+            indexFinger = frame.Hands[0].Fingers[(int)Finger.FingerType.TYPE_INDEX];
+            if (indexFinger.IsExtended)
+            {
+                Vector fingerTipPos = indexFinger.TipPosition;
+                Debug.Log("x: " + fingerTipPos.x + " y: " + fingerTipPos.y + " z: " + fingerTipPos.z);
+            }
+
+
+        }
+        //Leap.Pointable hand1;
+        //Leap.Vector.Vector pos = 
     }
 
     private void UpdatePieceDrag(Piece p)
