@@ -43,7 +43,7 @@ public class CheckersBoard : MonoBehaviour
     {
         UpdateMouseOver();
 
-        //if my turn
+        if((isWhite)?isWhiteTurn:!isWhiteTurn)
         {
             int x = (int)mouseOver.x;
             int y = (int)mouseOver.y;
@@ -223,35 +223,37 @@ public class CheckersBoard : MonoBehaviour
                 return;
             }
         }
-
-        /*
-        //check distance max 1 (to be removed after jump over pieces is implemented)
-        if ((Math.Abs(x2 - x1) > 1) || (Math.Abs(y2 - y1) > 1))
-            return;
-        //check if we are out of bounds
-        if (x2 < 0 || x1 >= pieces.Length || y2 < 0 || y2 >= pieces.Length)
-            return;
-        //if there is a selected piece
-
-        //if endDrag is occupied
-        if (pieces[x2, y2] ) //!= null
-        return;
-        //ensure diagonal move only
-        if (((x2 - x1) % 2 == 0) || ((y2 - y1) % 2 == 0))
-            return;
-
-        //if Valid move
-        MovePiece(selectedPiece, x2, y2);
-        pieces[x1, y1] = null;
-        pieces[x2, y2] = selectedPiece;*/
     }
 
     private void EndTurn()
     {
+        int x = (int)endDrag.x;
+        int y = (int)endDrag.y;
+
+        // Promoting to king
+        if(selectedPiece != null)
+        {
+            if(selectedPiece.isWhite && !selectedPiece.isKing && y == 7)
+            {
+                selectedPiece.isKing = true;
+                selectedPiece.transform.Rotate(Vector3.right * 180);
+            }
+            else if (!selectedPiece.isWhite && !selectedPiece.isKing && y == 0)
+            {
+                selectedPiece.isKing = true;
+                selectedPiece.transform.Rotate(Vector3.right * 180);
+            }
+        }
+
         selectedPiece = null;
         startDrag = Vector2.zero;
 
+        if (ScanForPossibleMove(selectedPiece, x, y).Count != 0 && hasKilled)
+            return;
+
         isWhiteTurn = !isWhiteTurn;
+        isWhite = !isWhite;
+
         hasKilled = false;
 
         CheckVictory();
@@ -259,7 +261,41 @@ public class CheckersBoard : MonoBehaviour
 
     private void CheckVictory()
     {
+        var ps = FindObjectsOfType<Piece>();
 
+        bool hasWhite = false;
+        bool hasBlack = false;
+
+        for(int i = 0; i < ps.Length; i++)
+        {
+            if (ps[i].isWhite)
+                hasWhite = true;
+            else
+                hasBlack = true;
+        }
+
+        if (!hasWhite)
+            Victory(false);
+        if (!hasBlack)
+            Victory(true);
+    }
+
+    private void Victory(bool isWhite)
+    {
+        if (isWhite)
+            Debug.Log("White has won!");
+        else
+            Debug.Log("Black has won!");
+    }
+
+    private List<Piece> ScanForPossibleMove(Piece p, int x, int y)
+    {
+        forcedPieces = new List<Piece>();
+
+        if (pieces[x, y].IsForceToMove(pieces, x, y))
+            forcedPieces.Add(pieces[x, y]);
+
+        return forcedPieces;
     }
 
     private List<Piece> ScanForPossibleMove()
