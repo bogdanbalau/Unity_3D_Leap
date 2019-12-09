@@ -299,6 +299,7 @@
      <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Utility\KabschSolver.cs" />
      <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Utility\PhysicsCallbacks.cs" />
      <Compile Include="Assets\Script\CheckersBoard.cs" />
+     <Compile Include="Assets\Script\finger_position_how_to.cs" />
      <Compile Include="Assets\Script\Piece.cs" />
      <None Include="Assets\Artwork\Fantasy Skybox FREE\Readme.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\LeapCG.cginc" />
