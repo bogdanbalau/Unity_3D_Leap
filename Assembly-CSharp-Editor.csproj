@@ -119,37 +119,37 @@
      <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\UI\Editor\InteractionSliderEditor.cs" />
      <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Utility\Editor\IgnoreColliderForInteractionEditor.cs" />
  <Reference Include="UnityEditor.TestRunner">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline.Editor">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.VSCode.Editor">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
  <Reference Include="Unity.CollabProxy.Editor">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Rider.Editor">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.UI">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -338,10 +338,10 @@
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.13f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="InteractionEngineUtility">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>G:/documente/AC Master CI AN II/PSIOC/Unity_3D_Leap/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
+ <HintPath>D:/Facultate/Master_An_2/Sem_I/PSIOC/Unity_3D_Leap/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.13f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

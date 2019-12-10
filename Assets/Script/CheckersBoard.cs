@@ -18,6 +18,7 @@ public class CheckersBoard : MonoBehaviour
     private bool isWhiteTurn;
 
     private Vector2 mouseOver;
+    private Vector2 leapOver;
     private Vector2 startDrag;
     private Vector2 endDrag;
 
@@ -25,6 +26,9 @@ public class CheckersBoard : MonoBehaviour
     private List<Piece> forcedPieces;
     private bool hasKilled;
 
+    bool k = true;
+    Vector3 cameraPosition = new Vector3(0, 0, 0);
+    public Collider targetCollider;
 
     Leap.Controller c;
 
@@ -36,6 +40,11 @@ public class CheckersBoard : MonoBehaviour
         GenerateBoard();
 
         c = new Controller();
+
+
+
+        cameraPosition = Camera.main.gameObject.transform.position;
+        Debug.Log("Camera Position    x: " + cameraPosition.x + " y: " + cameraPosition.y + " z: " + cameraPosition.z);
     }
 
     // Update is called once per frame
@@ -94,14 +103,38 @@ public class CheckersBoard : MonoBehaviour
         }
 
         Leap.Finger indexFinger;
+        Vector3 fingerTipPosUnity = new Vector3(0, 0, 0);
+        Vector3 fingerTipDirUnity = new Vector3(0, 0, 0);
+        Vector3 fingerToScreen = new Vector3(0, 0, 0);
+
+        Vector3 closestPoint = new Vector3(0, 0, 0);
+
 
         if (handList != null && frame.Hands.Count > 0)
         {
             indexFinger = frame.Hands[0].Fingers[(int)Finger.FingerType.TYPE_INDEX];
-            if (indexFinger.IsExtended)
+            if (k && indexFinger.IsExtended)
             {
                 Vector fingerTipPos = indexFinger.TipPosition;
-                Debug.Log("x: " + fingerTipPos.x + " y: " + fingerTipPos.y + " z: " + fingerTipPos.z);
+                Vector fingerTipDir = indexFinger.Direction;
+                fingerTipPosUnity = new Vector3(fingerTipPos.x, fingerTipPos.y, fingerTipPos.z);
+                fingerTipDirUnity = new Vector3(fingerTipDir.x, fingerTipDir.y, fingerTipDir.z);
+                Debug.DrawRay(fingerTipPosUnity, fingerTipDirUnity, Color.red);
+                Debug.Log("Tip Position    x: " + ((fingerTipPos.x/34)+4) + " y: " + ((fingerTipPos.y / 34) + 4) + " z: " + (((fingerTipPos.z*(-1)) / 34) + 4));//
+                fingerToScreen = Camera.main.WorldToScreenPoint(fingerTipPosUnity);
+
+                //closestPoint = Physics.ClosestPoint(cameraPosition, Collider.BoxCollider, )
+                //closestPoint = targetCollider.ClosestPoint(cameraPosition);
+                //Debug.Log("Closest  x: " + closestPoint.x + " y: " + closestPoint.y + " z: " + closestPoint.z);
+            }
+
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(fingerToScreen), out hit, 525.0f, LayerMask.GetMask("Board")))
+            //if(true)
+            {
+                leapOver.x = (int)(hit.point.x - boardOffset.x);
+                leapOver.y = (int)(hit.point.z - boardOffset.z);
+                Debug.Log("Hit Position    x: " + leapOver.x + " z: " + leapOver.y);
+                //k = false;
             }
 
 
