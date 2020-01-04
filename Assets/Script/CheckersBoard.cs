@@ -11,8 +11,14 @@ public class CheckersBoard : MonoBehaviour
 
     public GameObject whitePiecePrefab;
     public GameObject blackPiecePrefab;
+    public GameObject LMC; // Leap Motion Controller
     private Vector3 boardOffset = new Vector3(-4.0f, 0, -4.0f);
     private Vector3 pieceOffset = new Vector3(0.5f, 0, 0.5f);
+
+    private Vector3 CameraPosW = new Vector3(0f, 6f, -5f);
+    //private Vector3 CameraRotW = new Vector3(60f, 0f, 0f);
+    private Vector3 CameraPosB = new Vector3(0f, 6f, 5f);
+    private Vector3 CameraRot = new Vector3(0f, 180f, 0f);
 
     public bool isWhite;
     private bool isWhiteTurn;
@@ -21,6 +27,10 @@ public class CheckersBoard : MonoBehaviour
     private Vector2 leapOver;
     private Vector2 startDrag;
     private Vector2 endDrag;
+
+    public float pinchStrength = 0;
+    public int clickStatus = 0; //0 - nothing happend  1 - left click pressed  2 - left click released
+    public int lastClickStatus = 0; //0 - nothing happend  1 - left click pressed  2 - left click released
 
     private Piece selectedPiece;
     private List<Piece> forcedPieces;
@@ -36,6 +46,8 @@ public class CheckersBoard : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        LMC = GameObject.Find("Leap Motion Controller");
+
         isWhiteTurn = true;
         forcedPieces = new List<Piece>();
         GenerateBoard();
@@ -49,31 +61,72 @@ public class CheckersBoard : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        //Press ESC button to exit the game
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
+        //Press N button for new game (Restart)
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            Application.LoadLevel(0);
+        }
         UpdateMouseOver();
 
         if((isWhite)?isWhiteTurn:!isWhiteTurn)
         {
-            /*int x = (int)mouseOver.x;
-            int y = (int)mouseOver.y;*/
-
             int x = (int)leapOver.x;
             int y = (int)leapOver.y;
+
+            if (!isWhite)
+            {
+                leapOver.x = 7 - leapOver.x;
+                leapOver.y = 7 - leapOver.y;
+                x = 7 - x;
+                y = 7 - y;
+                indexFingerTipBoardPos.x = 8 - indexFingerTipBoardPos.x;
+                indexFingerTipBoardPos.z = 8 - indexFingerTipBoardPos.z;
+            }
 
             if (selectedPiece != null)
                 UpdatePieceDrag(selectedPiece);
 
-            if (Input.GetMouseButtonDown(1))
-            {
-                selectedPiece = null;
-            }
-            if (Input.GetMouseButtonDown(0))
+            GetClickStatus();
+            if(clickStatus == 1)
             {
                 SelectPiece(x, y);
             }
-            if(Input.GetMouseButtonUp(0))
+            if(clickStatus == 2)
             {
-                TryMove((int)startDrag.x, (int)startDrag.y, x, y); 
+                TryMove((int)startDrag.x, (int)startDrag.y, x, y);
             }
+        }
+    }
+    private void GetClickStatus()
+    {
+        switch(clickStatus)
+        {
+            case 0:
+                if (lastClickStatus == 1 && pinchStrength < 0.4)
+                {
+                    clickStatus = 2;
+                }
+                else
+                    if (lastClickStatus == 0 && pinchStrength > 0.7)
+                    {
+                        clickStatus = 1;
+                    }
+                break;
+            case 1:
+                clickStatus = 0;
+                lastClickStatus = 1;
+                break;
+            case 2:
+                clickStatus = 0;
+                lastClickStatus = 0;
+                break;
+            default:
+                break;
         }
     }
     private void UpdateMouseOver()
@@ -115,13 +168,15 @@ public class CheckersBoard : MonoBehaviour
         if (handList != null && frame.Hands.Count > 0)
         {
             indexFinger = frame.Hands[0].Fingers[(int)Finger.FingerType.TYPE_INDEX];
-            if (k && indexFinger.IsExtended)
+            pinchStrength = frame.Hands[0].PinchStrength;
+            //Debug.Log("Pinch strength: " + pinchStrength);
+            if (k)// && indexFinger.IsExtended)
             {
                 Vector fingerTipPos = indexFinger.TipPosition;
                 indexFingerTipBoardPos.x = (fingerTipPos.x / 34) + 4;
                 indexFingerTipBoardPos.y = (fingerTipPos.y / 34) + 4 - 9;
                 indexFingerTipBoardPos.z = ((fingerTipPos.z * (-1)) / 34) +4;
-                Debug.Log("Tip Position    x: " + ((fingerTipPos.x/34)+4) + " y: " + ((fingerTipPos.y / 34) + 4) + " z: " + (((fingerTipPos.z*(-1)) / 34) + 4));//
+                //Debug.Log("Tip Position    x: " + ((fingerTipPos.x/34)+4) + " y: " + ((fingerTipPos.y / 34) + 4) + " z: " + (((fingerTipPos.z*(-1)) / 34) + 4));//
                 leapOver.x = (int) Math.Floor((fingerTipPos.x / 34) + 4);
                 leapOver.y = (int) Math.Floor(((fingerTipPos.z * (-1)) / 34) + 4);
                 if (leapOver.x < 0 || leapOver.x > 7 || leapOver.y < 0 || leapOver.y > 7)
@@ -286,6 +341,34 @@ public class CheckersBoard : MonoBehaviour
         hasKilled = false;
 
         CheckVictory();
+        ChangeCameraView(isWhiteTurn);
+    }
+
+    private void ChangeCameraView(bool isWhiteTurn)
+    {
+        if(isWhiteTurn)
+        {
+            Camera.main.gameObject.transform.position = CameraPosW;
+            //Camera.main.gameObject.transform.Rotate(0, 180, 0);
+            Camera.main.gameObject.transform.eulerAngles = new Vector3(
+                Camera.main.gameObject.transform.eulerAngles.x,
+                Camera.main.gameObject.transform.eulerAngles.y + 180,
+                Camera.main.gameObject.transform.eulerAngles.z);
+        }
+        else
+        {
+            Camera.main.gameObject.transform.position = CameraPosB;
+            //Camera.main.gameObject.transform.Rotate(120, 180, 0);
+            Camera.main.gameObject.transform.eulerAngles = new Vector3(
+                Camera.main.gameObject.transform.eulerAngles.x,
+                Camera.main.gameObject.transform.eulerAngles.y + 180,
+                Camera.main.gameObject.transform.eulerAngles.z);
+        }
+
+        LMC.transform.eulerAngles = new Vector3(
+            LMC.transform.eulerAngles.x,
+            LMC.transform.eulerAngles.y + 180,
+            LMC.transform.eulerAngles.z);
     }
 
     private void CheckVictory()
