@@ -28,6 +28,7 @@ public class CheckersBoard : MonoBehaviour
 
     bool k = true;
     Vector3 cameraPosition = new Vector3(0, 0, 0);
+    Vector3 indexFingerTipBoardPos = new Vector3(0, 0, 0);
     public Collider targetCollider;
 
     Leap.Controller c;
@@ -40,9 +41,7 @@ public class CheckersBoard : MonoBehaviour
         GenerateBoard();
 
         c = new Controller();
-
-
-
+        
         cameraPosition = Camera.main.gameObject.transform.position;
         Debug.Log("Camera Position    x: " + cameraPosition.x + " y: " + cameraPosition.y + " z: " + cameraPosition.z);
     }
@@ -54,8 +53,11 @@ public class CheckersBoard : MonoBehaviour
 
         if((isWhite)?isWhiteTurn:!isWhiteTurn)
         {
-            int x = (int)mouseOver.x;
-            int y = (int)mouseOver.y;
+            /*int x = (int)mouseOver.x;
+            int y = (int)mouseOver.y;*/
+
+            int x = (int)leapOver.x;
+            int y = (int)leapOver.y;
 
             if (selectedPiece != null)
                 UpdatePieceDrag(selectedPiece);
@@ -116,31 +118,20 @@ public class CheckersBoard : MonoBehaviour
             if (k && indexFinger.IsExtended)
             {
                 Vector fingerTipPos = indexFinger.TipPosition;
-                Vector fingerTipDir = indexFinger.Direction;
-                fingerTipPosUnity = new Vector3(fingerTipPos.x, fingerTipPos.y, fingerTipPos.z);
-                fingerTipDirUnity = new Vector3(fingerTipDir.x, fingerTipDir.y, fingerTipDir.z);
-                Debug.DrawRay(fingerTipPosUnity, fingerTipDirUnity, Color.red);
+                indexFingerTipBoardPos.x = (fingerTipPos.x / 34) + 4;
+                indexFingerTipBoardPos.y = (fingerTipPos.y / 34) + 4 - 9;
+                indexFingerTipBoardPos.z = ((fingerTipPos.z * (-1)) / 34) +4;
                 Debug.Log("Tip Position    x: " + ((fingerTipPos.x/34)+4) + " y: " + ((fingerTipPos.y / 34) + 4) + " z: " + (((fingerTipPos.z*(-1)) / 34) + 4));//
-                fingerToScreen = Camera.main.WorldToScreenPoint(fingerTipPosUnity);
-
-                //closestPoint = Physics.ClosestPoint(cameraPosition, Collider.BoxCollider, )
-                //closestPoint = targetCollider.ClosestPoint(cameraPosition);
-                //Debug.Log("Closest  x: " + closestPoint.x + " y: " + closestPoint.y + " z: " + closestPoint.z);
+                leapOver.x = (int) Math.Floor((fingerTipPos.x / 34) + 4);
+                leapOver.y = (int) Math.Floor(((fingerTipPos.z * (-1)) / 34) + 4);
+                if (leapOver.x < 0 || leapOver.x > 7 || leapOver.y < 0 || leapOver.y > 7)
+                {
+                    leapOver.x = -1;
+                    leapOver.y = -1;
+                }
+                Debug.Log("Finger on board position: " + leapOver.x + " " + leapOver.y);
             }
-
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(fingerToScreen), out hit, 525.0f, LayerMask.GetMask("Board")))
-            //if(true)
-            {
-                leapOver.x = (int)(hit.point.x - boardOffset.x);
-                leapOver.y = (int)(hit.point.z - boardOffset.z);
-                Debug.Log("Hit Position    x: " + leapOver.x + " z: " + leapOver.y);
-                //k = false;
-            }
-
-
         }
-        //Leap.Pointable hand1;
-        //Leap.Vector.Vector pos = 
     }
 
     private void UpdatePieceDrag(Piece p)
@@ -151,11 +142,14 @@ public class CheckersBoard : MonoBehaviour
             return;
         }
 
-        RaycastHit hit;
+        /*RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("Board")))
         {
             p.transform.position = hit.point + Vector3.up;
-        }
+        }*/
+        indexFingerTipBoardPos.x = indexFingerTipBoardPos.x + boardOffset.x;
+        indexFingerTipBoardPos.z = indexFingerTipBoardPos.z + boardOffset.z;
+        p.transform.position = indexFingerTipBoardPos;
     }
 
     private void SelectPiece(int x, int y)
@@ -171,7 +165,8 @@ public class CheckersBoard : MonoBehaviour
             if (forcedPieces.Count == 0)
             {
                 selectedPiece = p;
-                startDrag = mouseOver;
+                //startDrag = mouseOver;
+                startDrag = leapOver;
             }
             else
             {
@@ -180,7 +175,8 @@ public class CheckersBoard : MonoBehaviour
                     return;
 
                 selectedPiece = p;
-                startDrag = mouseOver; 
+                //startDrag = mouseOver;
+                startDrag = leapOver;
             }
         }
     }
@@ -188,7 +184,7 @@ public class CheckersBoard : MonoBehaviour
     {
         forcedPieces = ScanForPossibleMove();
         
-        // Multimpayer Support
+        // Multipayer Support
         startDrag = new Vector2(x1, y1);
         endDrag = new Vector2(x2, y2);
         selectedPiece = pieces[x1, y1];
